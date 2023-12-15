@@ -6,4 +6,4 @@ require './vendor/autoload.php';
 
 
 $vanilla = new Main();
-$vanilla->downloadAll();
+echo print_r($vanilla->downloadAll());
