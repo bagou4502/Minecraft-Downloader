@@ -2,21 +2,29 @@
 
 namespace App;
 
+use App\Vanilla\Snapshot;
+use App\Vanilla\Vanilla;
+
 class Main
 {
-    private $servers = [];
-
+    private $vanilla;
+    private $snapshot;
     public function __construct()
     {
-        $this->servers[] = new Vanilla();
+        $this->vanilla = new Vanilla();
+        $this->snapshot = new Snapshot();
+
+        //Genere le dossier minecraft si il n'existe pas
+        if (!file_exists('minecraft')) {
+                mkdir('minecraft');
+        }
 
     }
 
-    public function downloadAll($version)
+    public function downloadAll()
     {
-        foreach($this->servers as $server)
-        {
-            $server->downloadVersion($version);
-        }
+        $this->vanilla->downloadVersions();
+        $this->snapshot->downloadVersions();
+        return;
     }
 }

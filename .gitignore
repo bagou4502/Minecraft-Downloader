@@ -1,0 +1,7 @@
+/vendor/
+/.idea/
+/composer.lock
+composer.phar
+*.log
+.env
+minecraft/
