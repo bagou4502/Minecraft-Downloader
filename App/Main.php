@@ -2,6 +2,9 @@
 
 namespace App;
 
+use App\Mohist\Banner;
+use App\Mohist\Mohist;
+use App\Others\Magma;
 use App\Paper\Folia;
 use App\Paper\PaperMc;
 use App\Paper\TraverTime;
@@ -21,7 +24,19 @@ class Main
     private $waterfall;
     private $velocity;
     private $travertime;
+    private $mohist;
+    private $banner;
+    private $magma;
 
+    //For sponge
+    //https://repo.spongepowered.org/repository/maven-releases/org/spongepowered/spongevanilla/1.16.5-8.2.1-RC1369/spongevanilla-1.16.5-8.2.1-RC1369-universal.jar
+    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongevanilla/versions?tags=,minecraft:1.16.5&offset=0&limit=1
+    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongevanilla/versions?tags=,minecraft:1.16.5&offset=0&limit=1
+    //https://spongepowered.org/downloads/spongeforge
+    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongeforge
+    //Purpur
+    //https://api.purpurmc.org/v2/purpur
+    //https://api.purpurmc.org/v2/purpur/1.16.5/latest/download
     public function __construct()
     {
         $this->vanilla = new Vanilla();
@@ -31,6 +46,9 @@ class Main
         $this->waterfall = new WaterFall();
         $this->velocity = new Velocity();
         $this->travertime = new TraverTime();
+        $this->mohist = new Mohist();
+        $this->banner = new Banner();
+        $this->magma = new Magma();
 
         //Genere le dossier minecraft si il n'existe pas
         if (!file_exists('minecraft')) {
@@ -45,7 +63,9 @@ class Main
     public function downloadAll(): array
     {
         $time1 = microtime(true);
-
+        $this->magma->downloadVersions();
+        $this->banner->downloadVersions();
+        $this->mohist->downloadVersions();
         $this->velocity->downloadVersions();
         $this->folia->downloadVersions();
         $this->waterfall->downloadVersions();
