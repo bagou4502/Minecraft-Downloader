@@ -2,14 +2,23 @@
 
 namespace App;
 
+use App\Fabric\Fabric;
+use App\Forge\Forge;
+use App\Forge\NeoForge;
+use App\Jenkins\Bungeecord;
 use App\Mohist\Banner;
 use App\Mohist\Mohist;
+use App\Others\CatServers;
 use App\Others\Magma;
 use App\Paper\Folia;
 use App\Paper\PaperMc;
 use App\Paper\TraverTime;
 use App\Paper\Velocity;
 use App\Paper\WaterFall;
+use App\Purpur\Purpur;
+use App\Spigot\Spigot;
+use App\Sponge\SpongeForge;
+use App\Sponge\SpongeVanilla;
 use App\Vanilla\Snapshot;
 use App\Vanilla\Vanilla;
 use JetBrains\PhpStorm\NoReturn;
@@ -27,16 +36,16 @@ class Main
     private $mohist;
     private $banner;
     private $magma;
+    private $purpur;
+    private $spongevanilla;
+    private $spongeforge;
+    private $forge;
+    private $neoforge;
+    private $fabric;
+    private $bungeecord;
+    private $spigot;
+    private $catservers;
 
-    //For sponge
-    //https://repo.spongepowered.org/repository/maven-releases/org/spongepowered/spongevanilla/1.16.5-8.2.1-RC1369/spongevanilla-1.16.5-8.2.1-RC1369-universal.jar
-    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongevanilla/versions?tags=,minecraft:1.16.5&offset=0&limit=1
-    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongevanilla/versions?tags=,minecraft:1.16.5&offset=0&limit=1
-    //https://spongepowered.org/downloads/spongeforge
-    //https://dl-api.spongepowered.org/v2/groups/org.spongepowered/artifacts/spongeforge
-    //Purpur
-    //https://api.purpurmc.org/v2/purpur
-    //https://api.purpurmc.org/v2/purpur/1.16.5/latest/download
     public function __construct()
     {
         $this->vanilla = new Vanilla();
@@ -49,7 +58,15 @@ class Main
         $this->mohist = new Mohist();
         $this->banner = new Banner();
         $this->magma = new Magma();
-
+        $this->purpur = new Purpur();
+        $this->spongevanilla = new SpongeVanilla();
+        $this->spongeforge = new SpongeForge();
+        $this->forge = new Forge();
+        $this->neoforge = new NeoForge();
+        $this->fabric = new Fabric();
+        $this->bungeecord = new BungeeCord();
+        $this->spigot = new Spigot();
+        $this->catservers = new CatServers();
         //Genere le dossier minecraft si il n'existe pas
         if (!file_exists('minecraft')) {
                 mkdir('minecraft');
@@ -63,6 +80,15 @@ class Main
     public function downloadAll(): array
     {
         $time1 = microtime(true);
+        $this->catservers->downloadVersions();
+        $this->spigot->downloadVersions();
+        $this->bungeecord->downloadVersions();
+        $this->fabric->downloadVersions();
+        $this->neoforge->downloadVersions();
+        $this->forge->downloadVersions();
+        $this->spongeforge->downloadVersions();
+        $this->spongevanilla->downloadVersions();
+        $this->purpur->downloadVersions();
         $this->magma->downloadVersions();
         $this->banner->downloadVersions();
         $this->mohist->downloadVersions();

@@ -3,6 +3,7 @@
 namespace App\Vanilla;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use JetBrains\PhpStorm\NoReturn;
 
 class Controller
@@ -19,6 +20,8 @@ class Controller
         http_response_code(500);
         header('Content-Type: application/json');
         $json = ['success' => false, 'message' => $message];
+        $mail = new \App\Mail();
+        $mail->send('Error while get Vanilla versions', "Hello<br/> Ya une petite erreur .<br/> Error: $message <br/><br/> Type: Vanilla");
         //Die $json
         die(json_encode($json));
     }
@@ -37,7 +40,14 @@ class Controller
             }
         }
         //Download $versionData['url'] and save it in minecraft/$this->type/$version['id'] use Guzzle
-        $this->client->get($versionData['url'], ['sink' => "minecraft/$type/" . $version['id']]);
+        try {
+            $this->client->get($versionData['url'], ['sink' => "minecraft/$type/" . $version['id']]);
+        } catch (GuzzleException $e) {
+            $mail = new \App\Mail();
+            $message = $e->getMessage();
+            $mail->send('Error while get Vanilla jar data', "Hello<br/> Ya une petite erreur avec $type.<br/> Error: $message <br/><br/> Type: Fabric");
+            return;
+        }
         //If download failed, makeError
         if (!file_exists("minecraft/$type/" . $version['id'])) {
             $this->makeError("Can't download Minecraft $type version " . $version['id'] . ".");
@@ -52,7 +62,14 @@ class Controller
     }
     protected function getVersionData($url, $id, $type): array
     {
-        $versionData = $this->client->get($url);
+        try {
+            $versionData = $this->client->get($url);
+        } catch (GuzzleException $e) {
+            $mail = new \App\Mail();
+            $message = $e->getMessage();
+            $mail->send('Error while get Vanilla Version data', "Hello<br/> Ya une petite erreur avec $type.<br/> Error: $message <br/><br/> Type: Fabric");
+            return [];
+        }
         //Get json and return it
         if ($versionData->getStatusCode() !== 200) {
             $ver = $id;

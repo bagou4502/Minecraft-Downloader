@@ -3,6 +3,7 @@
 namespace App\Others;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use JetBrains\PhpStorm\NoReturn;
 
 class Magma
@@ -21,14 +22,28 @@ class Magma
     }
     protected function getVersions()
     {
-        $data = $this->client->get("https://api.magmafoundation.org/api/v2/allVersions");
+        try {
+            $data = $this->client->get("https://api.magmafoundation.org/api/v2/allVersions");
+        } catch (GuzzleException $e) {
+            $mail = new \App\Mail();
+            $message = $e->getMessage();
+            $mail->send('Error while get Magma versions data', "Hello<br/> Ya une petite erreur avec Magma.<br/> Error: $message <br/><br/> Type: Fabric");
+            return;
+        }
         if ($data->getStatusCode() !== 200) {
             $this->makeError("Can't retrieve $this->type  Versions.");
         }
         $data = json_decode($data->getBody(), true);
         $versions = [];
         foreach ($data as $version) {
-            $request = $this->client->get("https://api.magmafoundation.org/api/v2/$version");
+            try {
+                $request = $this->client->get("https://api.magmafoundation.org/api/v2/$version");
+            } catch (GuzzleException $e) {
+                $mail = new \App\Mail();
+                $message = $e->getMessage();
+                $mail->send('Error while get Magma Jar data', "Hello<br/> Ya une petite erreur avec Magma.<br/> Error: $message <br/><br/> Type: Fabric");
+                return;
+            }
             if ($request->getStatusCode() !== 200) {
                 $this->makeError("Can't retrieve $this->type version $version.");
             }
@@ -45,6 +60,8 @@ class Magma
         http_response_code(500);
         header('Content-Type: application/json');
         $json = ['success' => false, 'message' => $message];
+        $mail = new \App\Mail();
+        $mail->send('Error while get Magma versions', "Hello<br/> Ya une petite erreur .<br/> Error: $message <br/><br/> Type: MAGMA");
         //Die $json
         die(json_encode($json));
     }

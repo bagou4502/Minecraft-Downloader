@@ -3,7 +3,12 @@
     "guzzlehttp/guzzle": "^7.8",
     "vlucas/phpdotenv": "^5.6",
     "ext-json": "*",
-    "nesbot/carbon": "^2.72"
+    "nesbot/carbon": "^2.72",
+    "ivopetkov/html5-dom-document-php": "2.*",
+    "ext-zip": "*",
+    "phpmailer/phpmailer": "^6.9",
+    "symfony/filesystem": "^7.0",
+    "symfony/finder": "^7.0"
   },
   "autoload": {
     "psr-4": {

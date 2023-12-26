@@ -3,6 +3,7 @@
 namespace App\Mohist;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use JetBrains\PhpStorm\NoReturn;
 
 class Controller
@@ -16,7 +17,14 @@ class Controller
     }
     protected function getVersions($type)
     {
-        $data = $this->client->get("https://mohistmc.com/api/v2/projects/$type");
+        try {
+            $data = $this->client->get("https://mohistmc.com/api/v2/projects/$type");
+        } catch (GuzzleException $e) {
+            $mail = new \App\Mail();
+            $message = $e->getMessage();
+            $mail->send('Error while get Mohist project data', "Hello<br/> Ya une petite erreur avec $type.<br/> Error: $message <br/><br/> Type: Fabric");
+            return;
+        }
         if ($data->getStatusCode() !== 200) {
             $this->makeError("Can't retrieve $type Versions.");
         }
@@ -32,6 +40,8 @@ class Controller
         http_response_code(500);
         header('Content-Type: application/json');
         $json = ['success' => false, 'message' => $message];
+        $mail = new \App\Mail();
+        $mail->send('Error while get Banner/Mohist Versions', "Hello<br/> Ya une petite erreur .<br/> Error: $message <br/><br/> Type: Banner/Mohist");
         //Die $json
         die(json_encode($json));
     }
@@ -51,7 +61,14 @@ class Controller
             }
         }
         //Download $versionData['url'] and save it in minecraft/$this->type/$version['id'] use Guzzle
-        $this->client->get($versionData['url'], ['sink' => "minecraft/$type/$version"]);
+        try {
+            $this->client->get($versionData['url'], ['sink' => "minecraft/$type/$version"]);
+        } catch (GuzzleException $e) {
+            $mail = new \App\Mail();
+            $message = $e->getMessage();
+            $mail->send('Error while get Mohist Jar data', "Hello<br/> Ya une petite erreur avec $type.<br/> Error: $message <br/><br/> Type: Fabric");
+            return;
+        }
         //If download failed, makeError
         if (!file_exists("minecraft/$type/$version")) {
             $this->makeError("Can't download Minecraft $type version $version.");
