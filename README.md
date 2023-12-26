@@ -57,6 +57,7 @@ Download and place in corresponding directories:
 - Java 8: [Download](https://builds.openlogic.com/downloadJDK/openlogic-openjdk-jre/8u392-b08/openlogic-openjdk-jre-8u392-b08-linux-x64.tar.gz) (java/8)
 - Java 16: [Download](https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz) (java/16)
 - Java 17: [Download](https://builds.openlogic.com/downloadJDK/openlogic-openjdk-jre/17.0.9+9/openlogic-openjdk-jre-17.0.9+9-linux-x64.tar.gz) (java/17)
+On linux you can also run the "setup.bash" script to download and extract the Java versions automatically.
 
 ## License
 This project is protected under the "Bagou450 Exclusive License" and cannot be used by others, even for personal use.
