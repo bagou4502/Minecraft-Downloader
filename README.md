@@ -11,7 +11,6 @@ The project categorizes numerous Minecraft server types, as follows:
 - fabric
 - folia
 - forge
-- getlist
 - magma
 - mohist
 - neoforge
